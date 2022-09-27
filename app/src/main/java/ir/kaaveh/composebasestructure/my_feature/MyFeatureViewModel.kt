@@ -12,6 +12,12 @@ class MyFeatureViewModel : BaseViewModel(), MyFeatureContract {
     override val state: StateFlow<MyFeatureContract.State> = mutableState.asStateFlow()
     override val effect: Flow<MyFeatureContract.Effect> = effectChannel.receiveAsFlow()
 
+    init {
+        showLoading()
+        // Do network stuff
+        showContent()
+    }
+
     override fun event(event: MyFeatureContract.Event) = when (event) {
         MyFeatureContract.Event.OnBackPressed -> onBackPressed()
         is MyFeatureContract.Event.ShowToast -> showToast(event.message)

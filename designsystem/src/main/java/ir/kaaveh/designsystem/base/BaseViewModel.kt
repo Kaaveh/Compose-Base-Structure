@@ -48,4 +48,35 @@ open class BaseViewModel : ViewModel(),
         }
         // Do something
     }
+
+    fun showLoading() {
+        _baseState.update {
+            it.copy(
+                isLoading = true,
+                isLoadingDialog = false,
+                errorState = null,
+            )
+        }
+    }
+
+    fun showContent() {
+        _baseState.update {
+            it.copy(
+                isLoading = false,
+                isLoadingDialog = false,
+                errorState = null,
+            )
+        }
+    }
+
+    fun showLoadingDialog() {
+        _baseState.update {
+            it.copy(
+                isLoading = false,
+                isLoadingDialog = true,
+                errorState = null,
+            )
+        }
+    }
+
 }
