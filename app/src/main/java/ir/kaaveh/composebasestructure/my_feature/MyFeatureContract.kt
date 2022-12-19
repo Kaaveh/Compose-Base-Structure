@@ -1,6 +1,7 @@
 package ir.kaaveh.composebasestructure.my_feature
 
 import ir.kaaveh.designsystem.UnidirectionalViewModel
+import ir.kaaveh.designsystem.base.BaseContract
 
 interface MyFeatureContract :
     UnidirectionalViewModel<MyFeatureContract.Event, MyFeatureContract.Effect, MyFeatureContract.State> {

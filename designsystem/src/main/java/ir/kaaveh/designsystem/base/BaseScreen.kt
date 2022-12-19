@@ -22,7 +22,7 @@ fun BaseScreen(
 
     baseEffect.collectInLaunchedEffect { effect ->
         when (effect) {
-            BaseEffect.OnErrorBackPressed -> {
+            BaseContract.BaseEffect.OnErrorBackPressed -> {
                 activity?.onBackPressed()
             }
         }

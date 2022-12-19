@@ -1,44 +1,28 @@
 package ir.kaaveh.designsystem.base
 
 import androidx.lifecycle.ViewModel
-import ir.kaaveh.designsystem.BaseUnidirectionalViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 
-data class BaseState(
-    val isLoading: Boolean = false,
-    val isLoadingDialog: Boolean = false,
-    val errorState: String? = null,
-)
+open class BaseViewModel : ViewModel(), BaseContract {
 
-sealed class BaseEffect {
-    object OnErrorBackPressed : BaseEffect()
-}
+    private val _baseState = MutableStateFlow(BaseContract.BaseState())
+    override val baseState: StateFlow<BaseContract.BaseState> = _baseState.asStateFlow()
 
-sealed class BaseEvent {
-    object OnErrorBackPressed : BaseEvent()
-    object OnErrorRetryPressed : BaseEvent()
-}
+    protected val baseEffectChannel = Channel<BaseContract.BaseEffect>(Channel.UNLIMITED)
+    override val baseEffect: Flow<BaseContract.BaseEffect> = baseEffectChannel.receiveAsFlow()
 
-open class BaseViewModel : ViewModel(),
-    BaseUnidirectionalViewModel<BaseEvent, BaseEffect, BaseState> {
-
-    private val _baseState = MutableStateFlow(BaseState())
-    override val baseState: StateFlow<BaseState> = _baseState.asStateFlow()
-
-    protected val baseEffectChannel = Channel<BaseEffect>(Channel.UNLIMITED)
-    override val baseEffect: Flow<BaseEffect> = baseEffectChannel.receiveAsFlow()
-
-    override fun baseEvent(event: BaseEvent) = when (event) {
-        BaseEvent.OnErrorBackPressed -> onErrorBackPressed()
-        BaseEvent.OnErrorRetryPressed -> onErrorRetryPressed()
+    override fun baseEvent(event: BaseContract.BaseEvent) = when (event) {
+        BaseContract.BaseEvent.OnErrorBackPressed -> onErrorBackPressed()
+        BaseContract.BaseEvent.OnErrorRetryPressed -> onErrorRetryPressed()
+        else -> {}
     }
 
     private fun onErrorBackPressed() {
-        baseEffectChannel.trySend(BaseEffect.OnErrorBackPressed)
+        baseEffectChannel.trySend(BaseContract.BaseEffect.OnErrorBackPressed)
     }
 
-    private fun onErrorRetryPressed(){
+    private fun onErrorRetryPressed() {
         _baseState.update {
             it.copy(
                 isLoading = true,
